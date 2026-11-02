@@ -1,0 +1,25 @@
+{
+  "name": "erp",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "pg:init": "node scripts/local-pg.mjs init",
+    "pg:start": "node scripts/local-pg.mjs start",
+    "pg:stop": "node scripts/local-pg.mjs stop",
+    "pg:status": "node scripts/local-pg.mjs status",
+    "build": "tsc -b apps/api",
+    "typecheck": "tsc -b apps/api && tsc -p apps/api/tsconfig.test.json",
+    "db:generate": "pnpm --filter @erp/db generate",
+    "db:setup": "pnpm build && node packages/db/dist/cli/setup.js",
+    "db:seed": "pnpm build && node packages/db/dist/cli/seed-demo.js",
+    "dev": "pnpm --filter @erp/api dev",
+    "test": "pnpm --filter @erp/api test"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}
