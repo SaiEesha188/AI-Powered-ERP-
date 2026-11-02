@@ -8,6 +8,8 @@ const envSchema = z
     SYSTEM_DATABASE_URL: z.string().startsWith('postgres'),
     JWT_SECRET: z.string().min(32),
     SMS_PROVIDER: z.enum(['console']).default('console'),
+    /** Login codes a number may request per hour; keep the default in production. */
+    OTP_MAX_PER_HOUR: z.coerce.number().int().min(1).max(1000).default(5),
     /** console = log messages (development); meta = WhatsApp Cloud API. */
     WHATSAPP_PROVIDER: z.enum(['console', 'meta']).default('console'),
     WHATSAPP_TOKEN: z.string().optional(),

@@ -19,7 +19,6 @@ export const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const OTP_TTL_MS = 5 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
-const OTP_MAX_PER_HOUR = 5;
 
 export interface ClientInfo {
   ip?: string;
@@ -55,19 +54,19 @@ export class AuthService {
    * Sends a code only to registered, active users. The response is the same either way so the
    * endpoint cannot be used to discover which numbers have accounts.
    */
-  async requestOtp(phone: string): Promise<void> {
+  async requestOtp(phone: string): Promise<string | undefined> {
     const since = new Date(Date.now() - 60 * 60 * 1000);
     const [recent] = await this.db
       .select({ n: count() })
       .from(otpCodes)
       .where(and(eq(otpCodes.phone, phone), gt(otpCodes.createdAt, since)));
-    if ((recent?.n ?? 0) >= OTP_MAX_PER_HOUR) throw new AppError('rate_limited', 'Too many codes requested; try again later');
+    if ((recent?.n ?? 0) >= this.config.OTP_MAX_PER_HOUR) throw new AppError('rate_limited', 'Too many codes requested; try again later');
 
     const [user] = await this.db
       .select({ id: users.id })
       .from(users)
       .where(and(eq(users.phone, phone), eq(users.status, 'active')));
-    if (!user) return;
+    if (!user) return undefined;
 
     const code = randomOtp();
     await this.db.insert(otpCodes).values({
@@ -76,6 +75,7 @@ export class AuthService {
       expiresAt: new Date(Date.now() + OTP_TTL_MS),
     });
     await this.sms.sendOtp(phone, code);
+    return code;
   }
 
   async verifyOtp(phone: string, code: string, client: ClientInfo): Promise<TokenPair> {

@@ -7,20 +7,27 @@ import { Public } from '../common/decorators.js';
 import { currentContext, currentUserId } from '../common/request-context.js';
 import { ZodPipe } from '../common/zod.pipe.js';
 import { SYSTEM_DB } from '../core/core.module.js';
+import { CONFIG, type Config } from '../config.js';
 import { AuthService, type ClientInfo } from './auth.service.js';
 
 const client = (req: Request): ClientInfo => ({ ip: req.ip, userAgent: req.get('user-agent') });
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    @Inject(CONFIG) private readonly config: Config,
+  ) {}
 
   @Public()
   @Post('otp/request')
   @HttpCode(202)
   async requestOtp(@Body(new ZodPipe(otpRequestSchema)) body: z.infer<typeof otpRequestSchema>) {
-    await this.auth.requestOtp(body.phone);
-    return { message: 'If this number is registered, a code has been sent.' };
+    const code = await this.auth.requestOtp(body.phone);
+    // Development only: with the console SMS sender there is no real SMS, so hand the code back
+    // (null = the number is not registered). Config refuses SMS_PROVIDER=console in production.
+    const devCode = this.config.SMS_PROVIDER === 'console' && this.config.NODE_ENV !== 'production' ? (code ?? null) : undefined;
+    return { message: 'If this number is registered, a code has been sent.', devCode };
   }
 
   @Public()

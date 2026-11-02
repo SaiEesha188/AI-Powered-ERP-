@@ -117,7 +117,7 @@ describe('sections and assignments (ACA-01, STF-02)', () => {
   it('shows a teacher their own sections and subjects', async () => {
     const mine = await t.as(teacher.token, tenant.instituteId).get('/me/teaching').expect(200);
     expect(mine.body.sections).toEqual([
-      { id: section8A, name: 'A', className: 'Class 8', isClassTeacher: false, mySubjects: [{ id: maths, name: 'Mathematics' }] },
+      { id: section8A, name: 'A', classId: class8, className: 'Class 8', isClassTeacher: false, mySubjects: [{ id: maths, name: 'Mathematics' }] },
     ]);
   });
 

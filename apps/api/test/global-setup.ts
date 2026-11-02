@@ -29,6 +29,7 @@ export default async function setup(project: TestProject) {
     SYSTEM_DATABASE_URL: testUrl(SYSTEM_DATABASE_URL),
     JWT_SECRET: 'test-secret-that-is-at-least-thirty-two-characters',
     SMS_PROVIDER: 'console',
+    OTP_MAX_PER_HOUR: '5',
     NOTIFICATIONS_WORKER: 'off',
     WHATSAPP_APP_SECRET: 'test-whatsapp-app-secret',
     WHATSAPP_VERIFY_TOKEN: 'test-verify-token',

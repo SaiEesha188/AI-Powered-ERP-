@@ -148,6 +148,7 @@ export class SectionsService {
         sections: detailed.map((s) => ({
           id: s.id,
           name: s.name,
+          classId: s.classId,
           className: s.className,
           isClassTeacher: s.classTeacherId === me.id,
           mySubjects: s.assignments.filter((a) => a.staffId === me.id).map((a) => ({ id: a.subjectId, name: a.subjectName })),
