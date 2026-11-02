@@ -1,7 +1,8 @@
 # Education ERP
 
 Multi-tenant ERP for schools, coaching centres and colleges (see `Education_ERP_BRD.pdf`).
-The API covers the BRD's MVP scope (section 4.1); web and mobile apps are not built yet.
+The API covers the BRD's MVP scope (section 4.1); `apps/web` holds the office portal and the
+teacher and parent apps.
 
 ## Stack
 
@@ -28,6 +29,7 @@ corepack pnpm pg:start        # project-only Postgres on localhost:5433 (data in
 corepack pnpm db:setup        # creates database + roles, runs migrations, syncs permissions/plans
 corepack pnpm db:seed         # optional: demo school with one user per role
 corepack pnpm dev             # API on http://localhost:3000, rebuilds on save
+corepack pnpm dev:web         # web apps on http://localhost:3001 (second terminal)
 corepack pnpm test            # recreates erp_test and runs the e2e suite
 ```
 
@@ -40,6 +42,24 @@ reliable option for daily work.
 Signing in with the demo data: `POST /auth/otp/request {"phone":"+919000000002"}`; the code is
 printed in the API log (`SMS_PROVIDER=console`). Then `POST /auth/otp/verify`, and send
 `Authorization: Bearer <accessToken>` plus `X-Institute-Id: <id from GET /me>` on institute routes.
+
+## Web apps (`apps/web`)
+
+One Next.js app with three experiences, chosen after sign-in from the person's roles:
+
+| Path | For | Highlights |
+|---|---|---|
+| `/admin` | Office, principal, management | Live dashboard, students (admission, Excel import, profiles), staff, classes and assignments, attendance register, calendar with approvals, circulars with read/agree tracking, message log and automations, report downloads, settings |
+| `/teacher` | Teachers (mobile-first) | Today view, one-tap attendance that works offline and syncs later, posting homework with photo or voice note, reviewing completion, notices |
+| `/parent` | Parents (mobile-first) | All children under one login, attendance calendar, homework with teacher feedback, notices with "I agree", study material, school calendar |
+
+The browser calls `/api/*` on the web origin and Next forwards to the API (`API_URL`, default
+`http://localhost:3000`), so no CORS setup is needed. In development the API returns the sign-in
+code (`devCode`) because no SMS is sent; the sign-in page fills it in. The teacher and parent apps
+are installable web apps (manifest included) and can later be wrapped for the Play Store.
+
+Visual checks: `node scripts/screenshots.mjs <phone> <admin|teacher|parent> <routes>` in `apps/web`
+captures desktop and phone screenshots; `scripts/demo-activity.mjs` adds a week of demo activity.
 
 ## Commands
 
@@ -108,7 +128,7 @@ the names in `packages/shared/src/notifications.ts`.
 
 ### Not built yet
 
-- Web portal and mobile apps (all of the above is API only).
+- Native app-store packaging of the teacher and parent apps (they run as installable web apps today).
 - Push notifications (needs the mobile app); student logins (USR-06); period-wise attendance
   (needs the timetable, ACA-03/04); payment gateway and fees (M16, Version 1).
 - Production adapters: S3 for files, a DLT-registered SMS provider (only the console sender exists).

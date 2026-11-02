@@ -1,0 +1,10 @@
+{
+  "name": "Vidya ERP",
+  "short_name": "Vidya",
+  "description": "Attendance, homework, circulars and parent updates for your institute.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#1e3a5f",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

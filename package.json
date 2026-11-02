@@ -17,7 +17,9 @@
     "db:setup": "pnpm build && node packages/db/dist/cli/setup.js",
     "db:seed": "pnpm build && node packages/db/dist/cli/seed-demo.js",
     "dev": "pnpm --filter @erp/api dev",
-    "test": "pnpm --filter @erp/api test"
+    "test": "pnpm --filter @erp/api test",
+    "dev:web": "pnpm --filter @erp/web dev",
+    "build:web": "pnpm --filter @erp/web build"
   },
   "devDependencies": {
     "typescript": "6.0.3"
