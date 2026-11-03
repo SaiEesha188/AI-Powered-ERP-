@@ -126,6 +126,7 @@ the names in `packages/shared/src/notifications.ts`.
 | 8 Learning materials | MAT-01, 02, 04 | `/materials`, `/family/children/:id/materials` |
 | 9 Circulars | COM-01, 03 | `/circulars`, `/inbox` |
 | 10 Dashboards, reports | RPT-01, 02, ATT-08 | `/dashboards/*`, `/reports/*?format=csv\|xlsx`, `/family/children/:id/summary` |
+| 11 Exams, marks, report cards (V1) | EX-01..04, MK-01..05, BR-07 | `/exams`, `/exams/papers/:id/marks`, `/exams/:id/report-cards`, `/report-cards/:id`, `/family/children/:id/report-cards` |
 
 ### Not built yet
 
