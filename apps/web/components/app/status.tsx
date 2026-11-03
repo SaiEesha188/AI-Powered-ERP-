@@ -44,3 +44,12 @@ export const EVENT_LABEL: Record<string, string> = {
   'material.added': 'New material',
   'circular.published': 'Circular',
 };
+
+/** Exam lifecycle (EX-01): draft → date sheet published → every section locked → results published. */
+export const EXAM_STATUS = {
+  draft: { label: 'Draft', tone: 'neutral' as const, hint: 'Date sheet not published' },
+  scheduled: { label: 'Marks entry', tone: 'info' as const, hint: 'Teachers are entering marks' },
+  locked: { label: 'Ready to publish', tone: 'warning' as const, hint: 'All sections locked' },
+  published: { label: 'Published', tone: 'success' as const, hint: 'Families can see results' },
+};
+

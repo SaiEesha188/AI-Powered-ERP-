@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, BookOpen, CalendarCheck2, Home, Library } from 'lucide-react';
+import { Bell, BookOpen, CalendarCheck2, GraduationCap, Home, Library } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { ChildProvider, ChildSwitcher, useChild } from '@/components/app/child';
 import { AppProvider } from '@/components/app/context';
@@ -34,6 +34,7 @@ function Shell({ children }: { children: ReactNode }) {
         { href: '/parent', label: 'Home', icon: Home },
         { href: '/parent/attendance', label: 'Attendance', icon: CalendarCheck2 },
         { href: '/parent/homework', label: 'Homework', icon: BookOpen },
+        { href: '/parent/results', label: 'Results', icon: GraduationCap },
         { href: '/parent/notices', label: 'Notices', icon: Bell, badge: unread },
         { href: '/parent/learn', label: 'Learn', icon: Library },
       ]}

@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, BookOpen, ClipboardCheck, CloudOff, Home, Library, RefreshCw } from 'lucide-react';
+import { Bell, BookOpen, ClipboardCheck, ClipboardPen, CloudOff, Home, Library, RefreshCw } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { toast } from 'sonner';
 import { AppProvider, useApp } from '@/components/app/context';
@@ -49,6 +49,7 @@ function Shell({ children }: { children: ReactNode }) {
         { href: '/teacher', label: 'Today', icon: Home },
         { href: '/teacher/attendance', label: 'Attendance', icon: ClipboardCheck },
         { href: '/teacher/homework', label: 'Homework', icon: BookOpen },
+        { href: '/teacher/marks', label: 'Marks', icon: ClipboardPen },
         { href: '/teacher/materials', label: 'Material', icon: Library },
         { href: '/teacher/inbox', label: 'Inbox', icon: Bell, badge: unread },
       ]}

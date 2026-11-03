@@ -4,6 +4,7 @@ import {
   BarChart3,
   BookOpen,
   CalendarDays,
+  ClipboardPen,
   ClipboardCheck,
   FileText,
   GraduationCap,
@@ -57,6 +58,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/classes', label: (t) => `${t.class}es & subjects`, icon: FileText, needs: ['academics.view'] },
       { href: '/admin/calendar', label: () => 'Calendar', icon: CalendarDays, needs: ['calendar.view'] },
+      { href: '/admin/exams', label: (t) => `${t.exam}s & report cards`, icon: ClipboardPen, needs: ['exams.view'] },
       { href: '/admin/materials', label: () => 'Materials', icon: Library, needs: ['materials.view'] },
       { href: '/admin/circulars', label: () => 'Circulars', icon: Megaphone, needs: ['comms.view'] },
       { href: '/admin/messages', label: () => 'Messages', icon: MessageSquareText, needs: ['comms.view'] },

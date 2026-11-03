@@ -295,3 +295,171 @@ export interface TrendPoint {
   halfDay: number;
   percent: number | null;
 }
+
+export interface AssessmentType {
+  id: string;
+  name: string;
+  weightage: number;
+  seq: number;
+}
+
+export interface GradeScale {
+  id: string;
+  name: string;
+  isDefault: boolean;
+  bands: { id?: string; minPct: number; maxPct: number; grade: string; points: number | null; description: string | null }[];
+}
+
+export type ExamStatus = 'draft' | 'scheduled' | 'locked' | 'published';
+
+export interface ExamRow {
+  id: string;
+  name: string;
+  assessmentTypeId: string;
+  assessmentType: string;
+  startDate: string;
+  endDate: string;
+  status: ExamStatus;
+  gradeScaleId: string | null;
+  publishedAt: string | null;
+  papers: number;
+  classes: { id: string; name: string }[];
+}
+
+export interface ExamPaper {
+  id: string;
+  classId: string;
+  className: string;
+  subjectId: string;
+  subjectName: string;
+  date: string | null;
+  maxMarks: number;
+  passMarks: number;
+  syllabusScope: string | null;
+}
+
+export interface ExamSection {
+  id: string;
+  name: string;
+  classId: string;
+  className: string;
+  classTeacherId: string | null;
+  students: number;
+  papers: number;
+  expected: number;
+  entered: number;
+  locked: boolean;
+  lockedAt: string | null;
+}
+
+export interface ExamDetail extends Omit<ExamRow, 'papers' | 'classes'> {
+  papers: ExamPaper[];
+  sections: ExamSection[];
+  reportCards: { total: number; published: number };
+}
+
+export interface MarksGridData {
+  paper: { id: string; examId: string; examName: string; subjectName: string; maxMarks: number; passMarks: number; status: ExamStatus };
+  locked: boolean;
+  canEdit: boolean;
+  students: { studentId: string; name: string; rollNo: number | null; admissionNo: string; marks: number | null; absent: boolean }[];
+}
+
+export interface MarksTask {
+  examId: string;
+  examName: string;
+  status: ExamStatus;
+  paperId: string;
+  subjectName: string;
+  date: string | null;
+  maxMarks: number;
+  sectionId: string;
+  sectionName: string;
+  className: string;
+  students: number;
+  entered: number;
+  locked: boolean;
+  isClassTeacher: boolean;
+}
+
+export interface ReportCardSubject {
+  subjectId: string;
+  subject: string;
+  maxMarks: number;
+  marks: number | null;
+  absent: boolean;
+  percent: number | null;
+  grade: string | null;
+  points: number | null;
+  passed: boolean | null;
+  classAverage: number | null;
+}
+
+export interface ReportCardData {
+  subjects: ReportCardSubject[];
+  totalMarks: number;
+  totalMax: number;
+  percent: number | null;
+  grade: string | null;
+  points: number | null;
+  passed: boolean;
+  rank: number | null;
+  sectionSize: number;
+  attendancePercent: number | null;
+  sectionName: string;
+  className: string;
+  rollNo: number | null;
+}
+
+export interface ReportCardRow {
+  id: string;
+  studentId: string;
+  name: string;
+  admissionNo: string;
+  className: string;
+  sectionName: string;
+  rollNo: number | null;
+  percent: number | null;
+  grade: string | null;
+  rank: number | null;
+  passed: boolean;
+  hasRemarks: boolean;
+  status: 'draft' | 'published';
+}
+
+export interface ReportCardDetail {
+  id: string;
+  examId: string;
+  examName: string;
+  startDate: string;
+  endDate: string;
+  studentId: string;
+  studentName: string;
+  admissionNo: string;
+  data: ReportCardData;
+  remarks: string | null;
+  status: 'draft' | 'published';
+  publishedAt: string | null;
+}
+
+export interface ChildExam {
+  examId: string;
+  examName: string;
+  status: ExamStatus;
+  startDate: string;
+  endDate: string;
+  papers: { subject: string; date: string | null; maxMarks: number; syllabusScope: string | null }[];
+}
+
+export interface ChildResult {
+  id: string;
+  examId: string;
+  examName: string;
+  assessmentType: string;
+  startDate: string;
+  endDate: string;
+  publishedAt: string | null;
+  percent: number | null;
+  grade: string | null;
+  passed: boolean;
+}
