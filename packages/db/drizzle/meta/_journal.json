@@ -127,6 +127,20 @@
       "when": 1793635953755,
       "tag": "0017_circulars_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1793689377972,
+      "tag": "0018_exams",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793689921136,
+      "tag": "0019_exams_rls",
+      "breakpoints": true
     }
   ]
 }

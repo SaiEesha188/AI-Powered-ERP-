@@ -9,6 +9,7 @@ import { CircularsModule } from './circulars/circulars.module.js';
 import { ErrorFilter } from './common/error.filter.js';
 import { requestContextMiddleware } from './common/request-context.js';
 import { CoreModule } from './core/core.module.js';
+import { ExamsModule } from './exams/exams.module.js';
 import { FamilyModule } from './family/family.module.js';
 import { FilesModule } from './files/files.js';
 import { HealthController } from './health.controller.js';
@@ -24,7 +25,7 @@ import { StudentsModule } from './students/students.module.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
-  imports: [CoreModule, AuthModule, PlatformModule, InstituteModule, RolesModule, UsersModule, CalendarModule, AuditModule, StaffModule, AcademicsModule, FamilyModule, StudentsModule, AttendanceModule, NotificationsModule, FilesModule, HomeworkModule, MaterialsModule, CircularsModule, ReportsModule],
+  imports: [CoreModule, AuthModule, PlatformModule, InstituteModule, RolesModule, UsersModule, CalendarModule, AuditModule, StaffModule, AcademicsModule, FamilyModule, StudentsModule, AttendanceModule, NotificationsModule, FilesModule, HomeworkModule, MaterialsModule, CircularsModule, ReportsModule, ExamsModule],
   controllers: [HealthController],
   providers: [{ provide: APP_FILTER, useClass: ErrorFilter }],
 })

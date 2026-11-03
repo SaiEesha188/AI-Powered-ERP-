@@ -10,6 +10,9 @@ import {
   calendarEvents,
   enrollments,
   eq,
+  examPapers,
+  exams,
+  reportCards,
   guardians,
   homework,
   inArray,
@@ -242,6 +245,27 @@ const circularPublished: Handler = async (tx, payload, institute) => {
   return { sourceType: 'circular', sourceId: circular.id, recipients };
 };
 
+const examScheduled: Handler = async (tx, payload, institute) => {
+  const [exam] = await tx.select({ id: exams.id, name: exams.name, startDate: exams.startDate, endDate: exams.endDate, status: exams.status }).from(exams).where(eq(exams.id, payload.examId as string));
+  if (!exam || exam.status === 'draft') return { recipients: [] };
+  const classIds = [...new Set((await tx.select({ classId: examPapers.classId }).from(examPapers).where(eq(examPapers.examId, exam.id))).map((r) => r.classId))];
+  const dates = exam.startDate === exam.endDate ? shortDate(exam.startDate) : `${shortDate(exam.startDate)} to ${shortDate(exam.endDate)}`;
+  const rows = await guardiansOfStudents(tx, await enrolledStudentIds(tx, { classIds }));
+  return { sourceType: 'exam', sourceId: exam.id, recipients: familyRecipients(rows, institute, (g) => ({ studentName: g.studentName, examName: exam.name, dates, link: payload.link as string })) };
+};
+
+const reportCardPublished: Handler = async (tx, payload, institute) => {
+  const [exam] = await tx.select({ id: exams.id, name: exams.name, status: exams.status }).from(exams).where(eq(exams.id, payload.examId as string));
+  if (!exam || exam.status !== 'published') return { recipients: [] };
+  const cards = await tx.select({ id: reportCards.id, studentId: reportCards.studentId }).from(reportCards).where(and(eq(reportCards.examId, exam.id), eq(reportCards.status, 'published')));
+  const rows = await guardiansOfStudents(tx, cards.map((c) => c.studentId));
+  return {
+    sourceType: 'exam',
+    sourceId: exam.id,
+    recipients: familyRecipients(rows, institute, (g) => ({ studentName: g.studentName, examName: exam.name, link: `${payload.link as string}/${cards.find((c) => c.studentId === g.studentId)?.id ?? ''}` })),
+  };
+};
+
 /** Steps that add events register their handler here. */
 export const HANDLERS: Partial<Record<NotificationEventType, Handler>> = {
   'attendance.absent': absent,
@@ -249,4 +273,6 @@ export const HANDLERS: Partial<Record<NotificationEventType, Handler>> = {
   'homework.posted': homeworkPosted,
   'material.added': materialAdded,
   'circular.published': circularPublished,
+  'exam.scheduled': examScheduled,
+  'report_card.published': reportCardPublished,
 };

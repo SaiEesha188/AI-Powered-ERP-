@@ -7,6 +7,8 @@ export const NOTIFICATION_EVENTS = {
   'homework.posted': { label: 'Homework posted', template: 'homework_digest', defaultTiming: 'digest' },
   'material.added': { label: 'New learning material', template: 'material_digest', defaultTiming: 'digest' },
   'circular.published': { label: 'Circular or notice published', template: 'circular', defaultTiming: 'immediate' },
+  'exam.scheduled': { label: 'Exam date sheet published', template: 'exam_schedule', defaultTiming: 'immediate' },
+  'report_card.published': { label: 'Report card published', template: 'report_card', defaultTiming: 'immediate' },
 } as const satisfies Record<string, { label: string; template: string; defaultTiming: 'immediate' | 'digest' }>;
 
 export type NotificationEventType = keyof typeof NOTIFICATION_EVENTS;
@@ -60,6 +62,23 @@ export const MESSAGE_TEMPLATES: Record<string, MessageTemplate> = {
       en: '{{instituteName}} circular: {{title}}. Read it here: {{link}}',
       hi: '{{instituteName}} परिपत्र: {{title}}। यहाँ पढ़ें: {{link}}',
     },
+  },
+};
+
+MESSAGE_TEMPLATES.exam_schedule = {
+  whatsappName: 'exam_schedule_v1',
+  params: ['studentName', 'examName', 'dates', 'link'],
+  bodies: {
+    en: 'Exam schedule for {{studentName}}: {{examName}}, {{dates}}. See the date sheet and syllabus: {{link}}',
+    hi: '{{studentName}} के लिए परीक्षा कार्यक्रम: {{examName}}, {{dates}}। डेट शीट और पाठ्यक्रम देखें: {{link}}',
+  },
+};
+MESSAGE_TEMPLATES.report_card = {
+  whatsappName: 'report_card_v1',
+  params: ['studentName', 'examName', 'link'],
+  bodies: {
+    en: 'The {{examName}} report card for {{studentName}} is ready. Open it here (link expires in 7 days): {{link}}',
+    hi: '{{studentName}} का {{examName}} रिपोर्ट कार्ड तैयार है। यहाँ खोलें (लिंक 7 दिन में समाप्त): {{link}}',
   },
 };
 

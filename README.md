@@ -59,7 +59,8 @@ code (`devCode`) because no SMS is sent; the sign-in page fills it in. The teach
 are installable web apps (manifest included) and can later be wrapped for the Play Store.
 
 Visual checks: `node scripts/screenshots.mjs <phone> <admin|teacher|parent> <routes>` in `apps/web`
-captures desktop and phone screenshots; `scripts/demo-activity.mjs` adds a week of demo activity.
+captures desktop and phone screenshots; `scripts/demo-activity.mjs` adds a week of demo activity and
+`scripts/demo-exams.mjs` a published unit test plus a mid-term in marks entry.
 
 ## Commands
 
@@ -132,4 +133,5 @@ the names in `packages/shared/src/notifications.ts`.
 - Push notifications (needs the mobile app); student logins (USR-06); period-wise attendance
   (needs the timetable, ACA-03/04); payment gateway and fees (M16, Version 1).
 - Production adapters: S3 for files, a DLT-registered SMS provider (only the console sender exists).
-- Version 1 modules: staff attendance and leave, curriculum, exams and report cards, AI.
+- Version 1 modules still to come: staff attendance and leave, curriculum tracking, timetable, AI.
+- Report cards as PDF (they are web pages shared by link today).

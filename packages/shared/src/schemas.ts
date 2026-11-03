@@ -412,3 +412,60 @@ export const homeworkReportQuerySchema = z
   .object({ from: dateSchema, to: dateSchema, format: exportFormatSchema })
   .refine((q) => q.to >= q.from, { message: 'to cannot be before from', path: ['to'] });
 export const dashboardDateQuerySchema = z.object({ date: dateSchema.optional() });
+
+// --- exams, marks and report cards (M13, M14) ---
+const pct = z.number().min(0).max(100);
+export const assessmentTypeSchema = z.object({ name: z.string().trim().min(2).max(60), weightage: pct, seq: z.int().min(0).max(100).default(0) });
+export const gradeBandSchema = z.object({
+  minPct: pct,
+  maxPct: pct,
+  grade: z.string().trim().min(1).max(10),
+  points: z.number().min(0).max(10).nullable().default(null),
+  description: z.string().trim().max(60).nullable().default(null),
+});
+export const gradeScaleSchema = z.object({
+  name: z.string().trim().min(2).max(60),
+  bands: z
+    .array(gradeBandSchema)
+    .min(1)
+    .max(20)
+    .refine((b) => b.every((x) => x.minPct <= x.maxPct), 'Each band needs min ≤ max'),
+});
+export const createExamSchema = z
+  .object({
+    name: z.string().trim().min(2).max(120),
+    assessmentTypeId: z.uuid(),
+    startDate: dateSchema,
+    endDate: dateSchema,
+    /** Papers are created for every subject of these classes (max marks 100, pass 33 by default). */
+    classIds: z.array(z.uuid()).min(1).max(50),
+    defaultMaxMarks: z.number().positive().max(1000).default(100),
+    defaultPassMarks: z.number().min(0).max(1000).default(33),
+    gradeScaleId: z.uuid().optional(),
+  })
+  .refine((e) => e.endDate >= e.startDate, { message: 'endDate cannot be before startDate', path: ['endDate'] });
+export const updateExamSchema = z
+  .object({ name: createExamSchema.shape.name, startDate: dateSchema, endDate: dateSchema, gradeScaleId: z.uuid().nullable() })
+  .partial();
+export const updatePaperSchema = z
+  .object({ date: dateSchema.nullable(), maxMarks: z.number().positive().max(1000), passMarks: z.number().min(0).max(1000), syllabusScope: z.string().trim().max(500).nullable() })
+  .partial();
+export const enterMarksSchema = z.object({
+  sectionId: z.uuid(),
+  entries: z
+    .array(z.object({ studentId: z.uuid(), marks: z.number().min(0).max(1000).nullable(), absent: z.boolean().default(false) }))
+    .min(1)
+    .max(500),
+  /** Needed when the section is already locked (MK-03). */
+  reason: z.string().trim().min(3).max(500).optional(),
+});
+export const marksQuerySchema = z.object({ sectionId: z.uuid() });
+export const updateRemarksSchema = z.object({ remarks: z.string().trim().max(1000).nullable() });
+export const listExamsQuerySchema = z.object({ status: z.enum(['draft', 'scheduled', 'locked', 'published']).optional() });
+
+export type AssessmentTypeInput = z.infer<typeof assessmentTypeSchema>;
+export type GradeScaleInput = z.infer<typeof gradeScaleSchema>;
+export type CreateExamInput = z.infer<typeof createExamSchema>;
+export type UpdateExamInput = z.infer<typeof updateExamSchema>;
+export type UpdatePaperInput = z.infer<typeof updatePaperSchema>;
+export type EnterMarksInput = z.infer<typeof enterMarksSchema>;

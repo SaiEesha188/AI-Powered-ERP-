@@ -9,3 +9,4 @@ export * from './notifications.js';
 export * from './homework.js';
 export * from './materials.js';
 export * from './circulars.js';
+export * from './exams.js';
