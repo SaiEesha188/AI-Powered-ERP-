@@ -13,7 +13,7 @@ export interface Session {
   experience?: Experience;
 }
 
-export type Experience = 'admin' | 'teacher' | 'parent';
+export type Experience = 'admin' | 'teacher' | 'parent' | 'platform';
 
 const KEY = 'erp.session';
 const listeners = new Set<() => void>();

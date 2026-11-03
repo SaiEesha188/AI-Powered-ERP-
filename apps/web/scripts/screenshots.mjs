@@ -31,7 +31,8 @@ async function signIn() {
   if (!code) throw new Error('OTP not found in API log');
   const tokens = await post('/auth/otp/verify', { phone, code });
   const me = await (await fetch(`${API}/me`, { headers: { authorization: `Bearer ${tokens.accessToken}` } })).json();
-  return { ...tokens, instituteId: me.memberships[0].instituteId, experience };
+  // Platform admins have no institute.
+  return { ...tokens, instituteId: me.memberships[0]?.instituteId, experience };
 }
 
 const session = await signIn();

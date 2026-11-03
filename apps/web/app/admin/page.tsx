@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useApp } from '@/components/app/context';
 import { PageHeader } from '@/components/app/page';
+import { AttendanceTrend } from '@/components/app/trend-chart';
 import { EVENT_TYPE } from '@/components/app/status';
 import { buttonStyles } from '@/components/ui/button';
 import { Avatar, Badge, Card, CardBody, CardHeader, EmptyState, Progress, Skeleton, StatCard } from '@/components/ui/card';
@@ -136,6 +137,12 @@ export default function OverviewPage() {
           </CardBody>
         </Card>
       </div>
+
+      {p && (
+        <div className="mt-6">
+          <AttendanceTrend to={p.date} />
+        </div>
+      )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
         <Card>

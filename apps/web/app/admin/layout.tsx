@@ -7,25 +7,30 @@ import {
   ClipboardCheck,
   FileText,
   GraduationCap,
+  History,
   LayoutDashboard,
+  Library,
   Megaphone,
   Menu,
   MessageSquareText,
   Settings,
+  ShieldCheck,
   Users,
   X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
+import { CommandPalette } from '@/components/app/command';
 import { AppProvider, useApp } from '@/components/app/context';
 import { UserMenu } from '@/components/app/user-menu';
 import { Logo } from '@/components/brand';
 import { cn } from '@/lib/cn';
+import type { Terminology } from '@/lib/types';
 
 interface NavItem {
   href: string;
-  label: (t: ReturnType<typeof useApp>['term']) => string;
+  label: (t: Terminology) => string;
   icon: typeof LayoutDashboard;
   needs: string[];
 }
@@ -44,6 +49,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/students', label: (t) => `${t.student}s`, icon: GraduationCap, needs: ['students.view'] },
       { href: '/admin/staff', label: () => 'Staff', icon: Users, needs: ['staff.view'] },
+      { href: '/admin/access', label: () => 'Users & roles', icon: ShieldCheck, needs: ['users.view', 'roles.view'] },
     ],
   },
   {
@@ -51,9 +57,11 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/classes', label: (t) => `${t.class}es & subjects`, icon: FileText, needs: ['academics.view'] },
       { href: '/admin/calendar', label: () => 'Calendar', icon: CalendarDays, needs: ['calendar.view'] },
+      { href: '/admin/materials', label: () => 'Materials', icon: Library, needs: ['materials.view'] },
       { href: '/admin/circulars', label: () => 'Circulars', icon: Megaphone, needs: ['comms.view'] },
       { href: '/admin/messages', label: () => 'Messages', icon: MessageSquareText, needs: ['comms.view'] },
       { href: '/admin/reports', label: () => 'Reports', icon: BarChart3, needs: ['reports.view'] },
+      { href: '/admin/audit', label: () => 'Audit log', icon: History, needs: ['audit.view'] },
       { href: '/admin/settings', label: () => 'Settings', icon: Settings, needs: ['institute.settings.view'] },
     ],
   },
@@ -111,9 +119,11 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function Shell({ children }: { children: ReactNode }) {
+  const { term } = useApp();
   const [open, setOpen] = useState(false);
   const path = usePathname();
   useEffect(() => setOpen(false), [path]);
+  const pages = NAV.flatMap((g) => g.items.map((i) => ({ href: i.href, label: i.label(term), icon: i.icon, needs: i.needs })));
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[264px_1fr]">
       <aside className="sticky top-0 hidden h-dvh border-r border-border bg-surface lg:block">
@@ -138,7 +148,8 @@ function Shell({ children }: { children: ReactNode }) {
           <div className="lg:hidden">
             <Logo withName={false} />
           </div>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <CommandPalette pages={pages} />
             <UserMenu />
           </div>
         </header>

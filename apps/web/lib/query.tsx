@@ -23,11 +23,11 @@ export function QueryProvider({ children }: { children: ReactNode }) {
 }
 
 /** GET with caching. Keys include the institute so switching institutes never shows stale data. */
-export function useApi<T>(path: string | null, opts: { enabled?: boolean; refetchInterval?: number } = {}) {
+export function useApi<T>(path: string | null, opts: { enabled?: boolean; refetchInterval?: number; noInstitute?: boolean } = {}) {
   const session = useSession();
   return useQuery({
-    queryKey: [path, session?.instituteId],
-    queryFn: () => api<T>(path!),
+    queryKey: [path, opts.noInstitute ? 'platform' : session?.instituteId],
+    queryFn: () => api<T>(path!, { noInstitute: opts.noInstitute }),
     enabled: Boolean(path) && Boolean(session) && (opts.enabled ?? true),
     refetchInterval: opts.refetchInterval,
   });

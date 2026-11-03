@@ -19,4 +19,5 @@ export const EXPERIENCE_LABEL: Record<Experience, { title: string; description: 
   admin: { title: 'School office', description: 'Dashboards, students, staff, calendar and circulars' },
   teacher: { title: 'Teacher', description: 'Attendance, homework and your classes' },
   parent: { title: 'Parent', description: 'Your children’s attendance, homework and notices' },
+  platform: { title: 'Platform console', description: 'Institutes, plans, usage and onboarding' },
 };

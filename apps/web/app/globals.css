@@ -2,66 +2,51 @@
 
 /*
  * Design tokens. Navy and teal follow the BRD's visual identity; every colour is a token so
- * institutes can later re-brand (CFG-05) by overriding --brand.
+ * institutes can later re-brand (CFG-05) by overriding --brand. Each token carries a light and
+ * a dark value through light-dark(); which one applies follows color-scheme on <html>, set by
+ * the theme switch (data-theme) or, by default, the device setting.
  */
 :root {
-  --bg: #f6f7f9;
-  --surface: #ffffff;
-  --surface-2: #f1f3f6;
-  --border: #e4e7ec;
-  --border-strong: #cfd5de;
-  --text: #0f1b2d;
-  --text-2: #4a5568;
-  --text-3: #7b8698;
-  --brand: #1e3a5f;
-  --brand-2: #2b5080;
-  --brand-soft: #e8eef6;
-  --on-brand: #ffffff;
-  --accent: #0f8b80;
-  --accent-soft: #e2f4f2;
-  --success: #15803d;
-  --success-soft: #e6f6ec;
-  --danger: #c2334d;
-  --danger-soft: #fdecef;
-  --warning: #b45309;
-  --warning-soft: #fdf3e3;
-  --info: #1d6fb8;
-  --info-soft: #e7f1fb;
-  --ring: rgb(30 58 95 / 0.35);
-  --shadow-sm: 0 1px 2px rgb(15 27 45 / 0.05);
-  --shadow: 0 1px 3px rgb(15 27 45 / 0.06), 0 6px 16px -4px rgb(15 27 45 / 0.08);
-  --shadow-lg: 0 10px 40px -10px rgb(15 27 45 / 0.25);
+  --bg: light-dark(#f6f7f9, #0b1220);
+  --surface: light-dark(#ffffff, #111a2b);
+  --surface-2: light-dark(#f1f3f6, #17223a);
+  --border: light-dark(#e4e7ec, #22304a);
+  --border-strong: light-dark(#cfd5de, #31425f);
+  --text: light-dark(#0f1b2d, #e8edf5);
+  --text-2: light-dark(#4a5568, #aab6c8);
+  --text-3: light-dark(#7b8698, #7d8ba1);
+  --brand: light-dark(#1e3a5f, #8fb4e8);
+  --brand-2: light-dark(#2b5080, #a9c6ef);
+  --brand-soft: light-dark(#e8eef6, #1a2a45);
+  --on-brand: light-dark(#ffffff, #0b1220);
+  --accent: light-dark(#0f8b80, #3cc4b6);
+  --accent-soft: light-dark(#e2f4f2, #12312f);
+  --success: light-dark(#15803d, #4ade80);
+  --success-soft: light-dark(#e6f6ec, #11301e);
+  --danger: light-dark(#c2334d, #f2768b);
+  --danger-soft: light-dark(#fdecef, #3a1720);
+  --warning: light-dark(#b45309, #f5b55a);
+  --warning-soft: light-dark(#fdf3e3, #36260f);
+  --info: light-dark(#1d6fb8, #7ab8f5);
+  --info-soft: light-dark(#e7f1fb, #132a42);
+  --ring: light-dark(rgb(30 58 95 / 0.35), rgb(143 180 232 / 0.4));
+  --shadow-sm: light-dark(0 1px 2px rgb(15 27 45 / 0.05), 0 1px 2px rgb(0 0 0 / 0.3));
+  --shadow: light-dark(
+    (0 1px 3px rgb(15 27 45 / 0.06), 0 6px 16px -4px rgb(15 27 45 / 0.08)),
+    (0 1px 3px rgb(0 0 0 / 0.3), 0 6px 16px -4px rgb(0 0 0 / 0.4))
+  );
+  --shadow-lg: light-dark(0 10px 40px -10px rgb(15 27 45 / 0.25), 0 10px 40px -10px rgb(0 0 0 / 0.6));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1220;
-    --surface: #111a2b;
-    --surface-2: #17223a;
-    --border: #22304a;
-    --border-strong: #31425f;
-    --text: #e8edf5;
-    --text-2: #aab6c8;
-    --text-3: #7d8ba1;
-    --brand: #8fb4e8;
-    --brand-2: #a9c6ef;
-    --brand-soft: #1a2a45;
-    --on-brand: #0b1220;
-    --accent: #3cc4b6;
-    --accent-soft: #12312f;
-    --success: #4ade80;
-    --success-soft: #11301e;
-    --danger: #f2768b;
-    --danger-soft: #3a1720;
-    --warning: #f5b55a;
-    --warning-soft: #36260f;
-    --info: #7ab8f5;
-    --info-soft: #132a42;
-    --ring: rgb(143 180 232 / 0.4);
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow: 0 1px 3px rgb(0 0 0 / 0.3), 0 6px 16px -4px rgb(0 0 0 / 0.4);
-    --shadow-lg: 0 10px 40px -10px rgb(0 0 0 / 0.6);
-  }
+/* Theme switch: follow the device unless the person chose one. */
+html {
+  color-scheme: light dark;
+}
+html[data-theme='light'] {
+  color-scheme: light;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -92,10 +77,6 @@
   --shadow-soft: var(--shadow-sm);
   --shadow-pop: var(--shadow-lg);
   --radius-card: 14px;
-}
-
-html {
-  color-scheme: light dark;
 }
 
 body {

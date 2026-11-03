@@ -12,6 +12,7 @@ export default function Home() {
   useEffect(() => {
     if (session === undefined) return;
     if (!session) router.replace('/login');
+    else if (session.experience === 'platform') router.replace('/platform');
     else if (session.instituteId && session.experience) router.replace(`/${session.experience}`);
     else router.replace('/select');
   }, [session, router]);

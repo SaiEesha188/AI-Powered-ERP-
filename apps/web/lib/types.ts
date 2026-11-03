@@ -221,7 +221,77 @@ export interface Material {
   type: 'link' | 'file';
   url: string | null;
   audience: 'staff' | 'students' | 'everyone';
+  createdBy: string;
   createdByName: string;
   createdAt: string;
   file: FileLink | null;
+}
+
+export interface AuditEntry {
+  id: string;
+  actorId: string | null;
+  action: string;
+  entity: string;
+  entityId: string | null;
+  before: unknown;
+  after: unknown;
+  ip: string | null;
+  at: string;
+}
+
+export interface PermissionDef {
+  code: string;
+  module: string;
+  description: string;
+}
+
+export interface Role {
+  id: string;
+  code: string;
+  name: string;
+  isSystem: boolean;
+  permissions: string[];
+}
+
+export interface UserRow {
+  id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  status: string;
+  roles: { code: string; name: string }[];
+}
+
+export interface Tenant {
+  instituteId: string;
+  name: string;
+  subdomain: string;
+  vertical: string;
+  status: string;
+  organizationId: string;
+  organizationName: string;
+  organizationStatus: string;
+  plan: string | null;
+  seats: number | null;
+  renewalDate: string | null;
+}
+
+export interface OrgUsage {
+  id: string;
+  name: string;
+  plan: string | null;
+  quota: number | null;
+  used: number;
+  percent: number | null;
+  alert: 'warning' | 'exceeded' | null;
+}
+
+export interface TrendPoint {
+  date: string;
+  total: number;
+  present: number;
+  absent: number;
+  late: number;
+  halfDay: number;
+  percent: number | null;
 }

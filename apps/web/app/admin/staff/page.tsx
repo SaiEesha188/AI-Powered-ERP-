@@ -1,15 +1,16 @@
 'use client';
 
-import { Phone, UserPlus, Users } from 'lucide-react';
+import { MoreHorizontal, Pencil, Phone, UserPlus, Users } from 'lucide-react';
 import { type FormEvent, useDeferredValue, useState } from 'react';
 import { useApp } from '@/components/app/context';
 import { PageHeader } from '@/components/app/page';
 import { SearchInput } from '@/components/app/pickers';
+import { EditStaffSheet } from '@/components/app/staff-actions';
 import { ROLE_LABEL } from '@/components/app/status';
 import { Button } from '@/components/ui/button';
 import { Avatar, Badge, Card, EmptyState, Skeleton } from '@/components/ui/card';
 import { Checkbox, Field, Input } from '@/components/ui/form';
-import { Sheet } from '@/components/ui/overlay';
+import { DropdownMenu, MenuItem, Sheet } from '@/components/ui/overlay';
 import { Table, Td, Th, Tr } from '@/components/ui/table';
 import { api } from '@/lib/api';
 import { formatDate, formatPhone } from '@/lib/cn';
@@ -24,6 +25,7 @@ export default function StaffPage() {
   const [q, setQ] = useState('');
   const query = useDeferredValue(q.trim().toLowerCase());
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<StaffRow | null>(null);
   const rows = (staff.data ?? []).filter((s) => !query || s.name.toLowerCase().includes(query) || s.designation.toLowerCase().includes(query));
   const active = (staff.data ?? []).filter((s) => s.status === 'active').length;
 
@@ -61,6 +63,7 @@ export default function StaffPage() {
                 <Th>Mobile</Th>
                 <Th>Joined</Th>
                 <Th>Status</Th>
+                {can('staff.manage') && <Th />}
               </tr>
             </thead>
             <tbody>
@@ -98,6 +101,21 @@ export default function StaffPage() {
                       {s.status === 'active' ? 'Active' : 'Left'}
                     </Badge>
                   </Td>
+                  {can('staff.manage') && (
+                    <Td className="text-right">
+                      <DropdownMenu
+                        trigger={
+                          <button className="rounded-lg p-1.5 text-text-3 hover:bg-surface-2 hover:text-text" aria-label={`Options for ${s.name}`}>
+                            <MoreHorizontal className="size-4" />
+                          </button>
+                        }
+                      >
+                        <MenuItem onSelect={() => setEditing(s)}>
+                          <Pencil className="size-4" /> Edit details
+                        </MenuItem>
+                      </DropdownMenu>
+                    </Td>
+                  )}
                 </Tr>
               ))}
             </tbody>
@@ -105,6 +123,7 @@ export default function StaffPage() {
         )}
       </Card>
       <AddStaffSheet open={open} onOpenChange={setOpen} />
+      {editing && <EditStaffSheet staff={editing} onClose={() => setEditing(null)} />}
     </>
   );
 }

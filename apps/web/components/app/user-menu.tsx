@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeftRight, ChevronDown, LogOut } from 'lucide-react';
+import { ArrowLeftRight, Check, ChevronDown, LogOut, Monitor, Moon, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar } from '@/components/ui/card';
@@ -8,7 +8,30 @@ import { DropdownMenu, MenuItem, MenuLabel, MenuSeparator } from '@/components/u
 import { api } from '@/lib/api';
 import { formatPhone } from '@/lib/cn';
 import { setSession, updateSession } from '@/lib/session';
+import { setTheme, type Theme, useTheme } from '@/lib/theme';
 import { useApp } from './context';
+
+const THEMES: { value: Theme; label: string; icon: typeof Sun }[] = [
+  { value: 'light', label: 'Light', icon: Sun },
+  { value: 'dark', label: 'Dark', icon: Moon },
+  { value: 'system', label: 'Match device', icon: Monitor },
+];
+
+/** Appearance choices, shared by every account menu. */
+export function ThemeItems() {
+  const theme = useTheme();
+  return (
+    <>
+      <MenuLabel>Appearance</MenuLabel>
+      {THEMES.map((t) => (
+        <MenuItem key={t.value} onSelect={() => setTheme(t.value)}>
+          <t.icon className="size-4" /> {t.label}
+          {theme === t.value && <Check className="ml-auto size-4 text-brand" />}
+        </MenuItem>
+      ))}
+    </>
+  );
+}
 
 export function UserMenu({ compact }: { compact?: boolean }) {
   const { me } = useApp();
@@ -49,6 +72,8 @@ export function UserMenu({ compact }: { compact?: boolean }) {
       >
         <ArrowLeftRight className="size-4" /> Switch institute or app
       </MenuItem>
+      <MenuSeparator />
+      <ThemeItems />
       <MenuSeparator />
       <MenuItem onSelect={signOut} danger>
         <LogOut className="size-4" /> Sign out
