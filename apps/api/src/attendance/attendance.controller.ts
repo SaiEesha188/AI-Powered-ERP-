@@ -1,5 +1,6 @@
 import {
   attendanceDateQuerySchema,
+  dateRangeQuerySchema,
   type DefaultersQuery,
   defaultersQuerySchema,
   type MarkAttendanceInput,
@@ -35,6 +36,12 @@ export class AttendanceController {
   @RequirePermissions('attendance.view')
   daily(@Query(new ZodPipe(attendanceDateQuerySchema)) q: z.infer<typeof attendanceDateQuerySchema>) {
     return this.attendance.dailySummary(q.date);
+  }
+
+  @Get('reports/trend')
+  @RequirePermissions('attendance.view')
+  trend(@Query(new ZodPipe(dateRangeQuerySchema)) q: z.infer<typeof dateRangeQuerySchema>) {
+    return this.attendance.trend(q.from, q.to);
   }
 
   @Get('reports/register/:sectionId')

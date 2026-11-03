@@ -290,6 +290,27 @@ export class AttendanceService {
     });
   }
 
+  /** Attendance percentage per day, for dashboard trend charts. */
+  trend(from: string, to: string) {
+    return this.tenantDb.run(async (tx) => {
+      const rows = await tx
+        .select({
+          date: attendanceSessions.date,
+          total: sql<number>`count(*)`.mapWith(Number),
+          present: sql<number>`count(*) filter (where ${studentAttendance.status} = 'present')`.mapWith(Number),
+          absent: sql<number>`count(*) filter (where ${studentAttendance.status} = 'absent')`.mapWith(Number),
+          late: sql<number>`count(*) filter (where ${studentAttendance.status} = 'late')`.mapWith(Number),
+          halfDay: sql<number>`count(*) filter (where ${studentAttendance.status} = 'half_day')`.mapWith(Number),
+        })
+        .from(studentAttendance)
+        .innerJoin(attendanceSessions, eq(attendanceSessions.id, studentAttendance.sessionId))
+        .where(and(eq(attendanceSessions.periodNo, 0), gte(attendanceSessions.date, from), lte(attendanceSessions.date, to)))
+        .groupBy(attendanceSessions.date)
+        .orderBy(asc(attendanceSessions.date));
+      return rows.map((r) => ({ ...r, percent: attendancePercent(r) }));
+    });
+  }
+
   /** Institute-wide counts of marked student-days in a date range. */
   async rangeTotals(tx: Tx, from: string, to: string) {
     const [row] = await tx
